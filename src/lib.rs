@@ -113,6 +113,8 @@
     clippy::doc_markdown
 )]
 
+extern crate openmp_sys;
+
 mod blob;
 mod constants;
 mod dds_metadata;

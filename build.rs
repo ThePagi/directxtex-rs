@@ -8,6 +8,7 @@ fn make_standard_build() -> Build {
     build
         .cpp(true)
         .std("c++17")
+        .opt_level(3)
         .warnings(false)
         .extra_warnings(false)
         .includes([
@@ -15,6 +16,7 @@ fn make_standard_build() -> Build {
             "external/DirectXMath/Inc",
             "external/DirectXTex/DirectXTex",
         ]);
+    std::env::var("DEP_OPENMP_FLAG").unwrap().split(" ").for_each(|f| { build.flag(f); });
 
     if !cfg!(windows) {
         build.includes(["external/DirectX-Headers/include/wsl/stubs", "ffi/include"]);
@@ -48,6 +50,7 @@ fn build_headers() {
 
     headers.compile("DirectX-Headers");
     guids.compile("DirectX-Guids");
+    
 }
 
 fn build_tex() {
@@ -90,6 +93,12 @@ fn build_tex() {
     }
 
     build.compile("DirectXTex");
+
+    if let Some(link) = std::env::var_os("DEP_OPENMP_CARGO_LINK_INSTRUCTIONS") {
+        for i in std::env::split_paths(&link) {
+            println!("cargo:{}", i.display());
+        }
+    }
 }
 
 fn build_ffi() {
