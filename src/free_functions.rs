@@ -145,6 +145,7 @@ pub fn scale_mip_maps_alpha_for_coverage(
     alpha_reference: f32,
 ) -> Result<ScratchImage> {
     let mut result = ScratchImage::default();
+    result.initialize(metadata, crate::CP_FLAGS::default())?;
     let hr = unsafe {
         ffi::DirectXTexFFI_ScaleMipMapsAlphaForCoverage(
             images.as_ffi_ptr(),
